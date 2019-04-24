@@ -1,26 +1,18 @@
 const express = require("express");
+const nunjucks = require("nunjucks");
 
 const app = express();
 
-const logMiddleware = (req, res, next) => {
-  console.log(
-    `HOST: ${req.headers.host} | URL: ${req.url} | METHOD: ${req.method}`
-  );
+nunjucks.configure("views", {
+  autoescape: true,
+  express: app,
+  watch: true
+});
 
-  req.appName = "GoNode";
-
-  return next();
-};
-
-app.use(logMiddleware);
+app.set("view engine", "njk");
 
 app.get("/", (req, res) => {
-  return res.send(`Welcome ${req.query.name}`);
+  return res.render("list", { name: "Diego" });
 });
 
-app.get("/nome/:name", (req, res) => {
-  return res.json({
-    message: `Bem-vindo ao ${req.appName}, ${req.params.name}`
-  });
-});
 app.listen(3000);
